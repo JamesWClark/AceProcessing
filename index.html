@@ -5,6 +5,7 @@
     <link href="main.css" rel="stylesheet"/>
 </head>
 <body>
+    <div id="support-message"></div>
 
     <div id="canvas-container"><canvas id="sketch"></canvas></div>
 
@@ -17,7 +18,10 @@ void draw() {
     ellipse(mouseX, mouseY, 50, 50);
 }</script>
 
-    <div><button id="run">Run</button></div>
+    <div>
+        <button id="run">Run</button>
+        <input type="file" id="files" name="files[]" multiple />
+    </div>
     
     <pre id="editor"></pre>
 
