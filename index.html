@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ace Processing</title>
+    <link href="main.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <div id="canvas-container"><canvas id="sketch"></canvas></div>
+
+    <script id="processing-code" type="text/processing" data-processing-target="sketch">void setup() {
+    size(500,500);
+}
+
+void draw() {
+    background(125);
+    ellipse(mouseX, mouseY, 50, 50);
+}</script>
+
+    <div><button id="run">Run</button></div>
+    
+    <pre id="editor"></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.9/processing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" charset="utf-8"></script>
+    <script src="main.js"></script>
+
+</body>
+</html>
