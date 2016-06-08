@@ -3,6 +3,8 @@
 var editor;
 var numFiles = 0;
 
+var collection = [];
+
 var verifyFileAPISupport = function() {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -14,10 +16,18 @@ var verifyFileAPISupport = function() {
 };
 
 var processFile = function(event, file) {
-    var code = event.target.result;
-    console.log(file.name);
-    setNewSketch(code);
-    setEditorCode(code);
+    var f = {
+      code : event.target.result,
+      name : file.name
+    };
+    collection.push(f);
+    $('#file-name').text(collection.length - 1 + ": " + f.name);
+    try {
+      setNewSketch(f.code);
+    } catch (err) {
+      console.log('got error = ' + err);
+    }
+    setEditorCode(f.code);  
 };
 
 var processFiles = function(files) {
@@ -71,21 +81,38 @@ $(document).ready(function() {
     
     $('#run').click(function() {
         var code = editor.getSession().getValue();
-        setNewSketch(code);
+        try {
+            setNewSketch(code);
+            $('#error-message').text('');
+        } catch(err) {
+            $('#error-message').text(err);
+        }
     });
 });
 
-/* properties of Processing object
-debug
-main.js:20 instances
-main.js:20 getInstanceById
-main.js:20 compile
-main.js:20 logger
-main.js:20 version
-main.js:20 lib
-main.js:20 registerLibrary
-main.js:20 Sketch
-main.js:20 loadSketchFromSources
-main.js:20 reload
-main.js:20 disableInit
-*/
+var pimp = function(index) {
+    var f = collection[index];
+    $('#file-name').text(index + ": " + f.name);
+    try {
+        setNewSketch(f.code);
+        $('#error-message').text('');
+    } catch(err) {
+        $('#error-message').text(err);
+    }
+    setEditorCode(f.code);
+};
+
+var windex = 0;
+$(document).keydown(function(e){
+    // left arrow
+    if ((e.keyCode || e.which) == 37 && windex > 0) {   
+        windex--;
+        pimp(windex);
+    }
+    // right arrow
+    if ((e.keyCode || e.which) == 39 && windex < collection.length - 1) {
+        windex++;
+        pimp(windex);
+    }   
+});
+
