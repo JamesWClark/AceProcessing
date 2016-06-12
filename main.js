@@ -20,14 +20,24 @@ var processFile = function(event, file) {
       code : event.target.result,
       name : file.name
     };
-    collection.push(f);
-    $('#file-name').text(collection.length - 1 + ": " + f.name);
-    try {
-      setNewSketch(f.code);
-    } catch (err) {
-      console.log('got error = ' + err);
+    var a = f.name.split(".");
+    if(a.length === 1 || ( a[0] === "" && a.length === 2 ) ) {
+        // ignore the file, it has no extension
+    } else if (a.pop() === 'pde') {
+        collection.push(f);
+        $('#file-name').text(collection.length - 1 + ": " + f.name);
+        try {
+          setNewSketch(f.code);
+        } catch (err) {
+          console.log('got error = ' + err);
+          console.log('file.name = ' + f.name);
+        }
+        setEditorCode(f.code);  
+    } else {
+        console.log('processFile didnt work?');
+        console.log('file.name = ' + f.name);
+        console.log('file.ext = ' + a.pop());
     }
-    setEditorCode(f.code);  
 };
 
 var processFiles = function(files) {
