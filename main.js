@@ -4,12 +4,14 @@ var editor;
 var numFiles = 0;
 var numFilesProcessed = 0;
 var collection = [];
+var windex = 0; // used by arrow keys to set the current index
 
 // call this every time new files are uploaded
 var reset = function() {
     collection = [];
     numFiles = 0;
     numFilesProcessed = 0;
+    windex = 0;
 };
 
 var verifyFileAPISupport = function() {
@@ -118,7 +120,6 @@ var pimp = function(index) {
     setEditorCode(f.code);
 };
 
-var windex = 0;
 $(document).keydown(function(e){
     // left arrow
     if ((e.keyCode || e.which) == 37 && windex > 0) {   
