@@ -3,8 +3,14 @@
 var editor;
 var numFiles = 0;
 var numFilesProcessed = 0;
-
 var collection = [];
+
+// call this every time new files are uploaded
+var reset = function() {
+    collection = [];
+    numFiles = 0;
+    numFilesProcessed = 0;
+};
 
 var verifyFileAPISupport = function() {
     // Check for the various File API support.
@@ -54,6 +60,7 @@ var processFiles = function(files) {
 };
 
 var onFilesSelected = function(event) {
+    reset();
     var files = event.target.files; // FileList object
     processFiles(files);
 };
