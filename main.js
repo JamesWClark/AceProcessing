@@ -2,6 +2,7 @@
 
 var editor;
 var numFiles = 0;
+var numFilesProcessed = 0;
 
 var collection = [];
 
@@ -24,19 +25,17 @@ var processFile = function(event, file) {
     if(a.length === 1 || ( a[0] === "" && a.length === 2 ) ) {
         // ignore the file, it has no extension
     } else if (a.pop() === 'pde') {
-        collection.push(f);
-        $('#file-name').text(collection.length - 1 + ": " + f.name);
-        try {
-          setNewSketch(f.code);
-        } catch (err) {
-          console.log('got error = ' + err);
-          console.log('file.name = ' + f.name);
-        }
-        setEditorCode(f.code);  
+        collection.push(f);        
     } else {
-        console.log('processFile didnt work?');
+        console.log('not a PDE - ');
         console.log('file.name = ' + f.name);
-        console.log('file.ext = ' + a.pop());
+    }
+    numFilesProcessed++;
+    
+    // we're done processing files - load the first one
+    if(numFilesProcessed === numFiles) {
+        console.log(collection);
+        pimp(0);
     }
 };
 
