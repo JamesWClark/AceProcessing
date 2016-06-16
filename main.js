@@ -112,6 +112,7 @@ var pimp = function(index) {
     var f = collection[index];
     $('#file-name').text(index + ": " + f.name);
     try {
+        $('.pjsconsole .console').html('boom');
         setNewSketch(f.code);
         $('#error-message').text('');
     } catch(err) {

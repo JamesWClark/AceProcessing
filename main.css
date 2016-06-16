@@ -17,3 +17,12 @@
 #error-message {
   color: red;
 }
+
+.pjsconsole {
+    height: 200px !important;
+    position: initial !important;
+}
+.pjsconsole .console {
+    height: 200px !important ;
+    position: initial !important;
+}
