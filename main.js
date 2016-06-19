@@ -1,4 +1,5 @@
 /* JUST WOW - https://www.tinymce.com/ */
+/* FOLDER DROP - http://jsfiddle.net/bgrins/gmp6W/ */
 
 var editor;
 var editorFontSize = 14;
