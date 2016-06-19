@@ -1,6 +1,7 @@
 /* JUST WOW - https://www.tinymce.com/ */
 
 var editor;
+var editorFontSize = 14;
 var numFiles = 0;
 var numFilesProcessed = 0;
 var collection = [];
@@ -93,6 +94,7 @@ $(document).ready(function() {
     editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
     editor.setTheme("ace/theme/monokai");
+    editor.setFontSize(editorFontSize);
     editor.getSession().setMode("ace/mode/java");
     
     setEditorCode(initcode);
@@ -106,6 +108,18 @@ $(document).ready(function() {
             $('#error-message').text(err);
         }
     });
+    
+    $('#fontup').click(function() {
+        editor.setFontSize(++editorFontSize);
+        $('#fontSize').text(editorFontSize);
+    });
+    
+    $('#fontdown').click(function() {
+        editor.setFontSize(--editorFontSize);
+        $('#fontSize').text(editorFontSize);
+    });
+    
+    $('#fontSize').text(editorFontSize);
 });
 
 var pimp = function(index) {

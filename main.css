@@ -26,3 +26,11 @@
     height: 200px !important ;
     position: initial !important;
 }
+
+.monospace {
+    font-family: monospace;
+}
+
+#fontStuff {
+    margin-top: 7px;
+}
