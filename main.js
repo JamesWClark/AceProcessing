@@ -1,12 +1,42 @@
 /* FOLDER DROP - view-source:http://protonet.github.io/plupload/examples/drag_and_drop.html */
 /* ZIP - https://stuk.github.io/jszip/documentation/howto/read_zip.html */
 
+// ZipObject API
+// https://stuk.github.io/jszip/documentation/api_zipobject.html
+
 var editor;
 var editorFontSize = 14;
 var numFiles = 0;
 var numFilesProcessed = 0;
-var collection = [];
+var collection = []; // the files collection, whether zip or otherwise
 var windex = 0; // used by arrow keys to set the current index
+
+// logger that prevents circular object reference in javascript
+var log = function(msg, obj) {
+    console.log('\n');
+    if(obj) {
+        try {
+            console.log(msg + JSON.stringify(obj));
+        } catch(err) {
+            var simpleObject = {};
+            for (var prop in obj ){
+                if (!obj.hasOwnProperty(prop)){
+                    continue;
+                }
+                if (typeof(obj[prop]) == 'object'){
+                    continue;
+                }
+                if (typeof(obj[prop]) == 'function'){
+                    continue;
+                }
+                simpleObject[prop] = obj[prop];
+            }
+            console.log('circular-' + msg + JSON.stringify(simpleObject)); // returns cleaned up JSON
+        }        
+    } else {
+        console.log(msg);
+    }
+};
 
 // call this every time new files are uploaded
 var reset = function() {
@@ -27,27 +57,62 @@ var verifyFileAPISupport = function() {
     }    
 };
 
-// process a single file
-var processFile = function(event, file) {
-    var f = {
-      code : event.target.result,
-      name : file.name
-    };
-    var a = f.name.split(".");
-    if(a.length === 1 || ( a[0] === "" && a.length === 2 ) ) {
-        // ignore the file, it has no extension
-    } else if (a.pop() === 'pde') {
-        collection.push(f);        
-    } else {
-        console.log('not a PDE - ');
-        console.log('file.name = ' + f.name);
-    }
+// checks if all the files are finished processing
+var continueProcessing = function() {
     numFilesProcessed++;
     
     // we're done processing files - load the first one
     if(numFilesProcessed === numFiles) {
         console.log(collection);
         pimp(0);
+    }
+};
+
+// process a single file
+var processFile = function(event, file) {
+    // split filename into array parts for extension detection
+    var a = file.name.split('.');
+    
+    // if the filename has an extension
+    if (a.length > 1) {
+        var ext = a.pop(); // the extension is the last element of the array
+        switch(ext) {
+            case 'pde':
+                collection.push({
+                    name : file.name,
+                    code : event.target.result
+                });
+                continueProcessing();
+                break;
+            case 'zip':
+                var compressed = new JSZip();
+                compressed.loadAsync(file).then(function(contents) {
+                    // contents is an array of compressed files
+                    contents.forEach(function(path, zipObject) {
+                        var isFolder = zipObject.dir;
+                        if(isFolder) {
+                            // do nothing
+                        } else {
+                            compressed.file(path).async('string').then(function(text) {
+                                collection.push({
+                                    name : path.split('/').pop(),
+                                    code : text
+                                });
+                                continueProcessing();
+                            });
+                        }
+                    });
+                }, function() { // error handler
+                    log('zip error?')
+                });
+                break;
+            default:
+                console.log('not a valid file format. should be .pde or .zip - ');
+                console.log('file.name = ' + f.name);
+                break;
+        }                    
+    } else {
+        log('not a valid file');
     }
 };
 
