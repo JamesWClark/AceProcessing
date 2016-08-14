@@ -1,5 +1,5 @@
-/* JUST WOW - https://www.tinymce.com/ */
-/* FOLDER DROP - http://jsfiddle.net/bgrins/gmp6W/ */
+/* FOLDER DROP - view-source:http://protonet.github.io/plupload/examples/drag_and_drop.html */
+/* ZIP - https://stuk.github.io/jszip/documentation/howto/read_zip.html */
 
 var editor;
 var editorFontSize = 14;
@@ -16,6 +16,7 @@ var reset = function() {
     windex = 0;
 };
 
+// checks if the user's web browser supports all necessary apis
 var verifyFileAPISupport = function() {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -26,6 +27,7 @@ var verifyFileAPISupport = function() {
     }    
 };
 
+// process a single file
 var processFile = function(event, file) {
     var f = {
       code : event.target.result,
@@ -49,6 +51,7 @@ var processFile = function(event, file) {
     }
 };
 
+// process all the dropped files
 var processFiles = function(files) {
     numFiles = files.length;
     for(var i = 0; i < files.length; i++) {
@@ -63,20 +66,24 @@ var processFiles = function(files) {
     }
 };
 
+// fires when file(s) dropped
 var onFilesSelected = function(event) {
     reset();
     var files = event.target.files; // FileList object
     processFiles(files);
 };
 
+// register file drop change
 var registerHandlers = function() {
     document.getElementById('files').addEventListener('change', onFilesSelected, false);
 };
 
+// set the editor code
 var setEditorCode = function(code) {
     editor.getSession().setValue(code);
 };
 
+// update canvas and editor with new code
 var setNewSketch = function(code) {
     Processing.getInstanceById('sketch').exit();
     var container = $('#canvas-container');
@@ -87,42 +94,7 @@ var setNewSketch = function(code) {
     new Processing(canvas, code);
 };
 
-$(document).ready(function() {
-    verifyFileAPISupport();
-    registerHandlers();
-    
-    var initcode = $('#processing-code').text();
-    editor = ace.edit("editor");
-    editor.$blockScrolling = Infinity;
-    editor.setTheme("ace/theme/monokai");
-    editor.setFontSize(editorFontSize);
-    editor.getSession().setMode("ace/mode/java");
-    
-    setEditorCode(initcode);
-    
-    $('#run').click(function() {
-        var code = editor.getSession().getValue();
-        try {
-            setNewSketch(code);
-            $('#error-message').text('');
-        } catch(err) {
-            $('#error-message').text(err);
-        }
-    });
-    
-    $('#fontup').click(function() {
-        editor.setFontSize(++editorFontSize);
-        $('#fontSize').text(editorFontSize);
-    });
-    
-    $('#fontdown').click(function() {
-        editor.setFontSize(--editorFontSize);
-        $('#fontSize').text(editorFontSize);
-    });
-    
-    $('#fontSize').text(editorFontSize);
-});
-
+// called by keydown - flips through sketches and code
 var pimp = function(index) {
     var f = collection[index];
     $('#file-name').text(index + ": " + f.name);
@@ -149,3 +121,42 @@ $(document).keydown(function(e){
     }   
 });
 
+$(document).ready(function() {
+    verifyFileAPISupport();
+    registerHandlers();
+    
+    var initcode = $('#processing-code').text();
+    editor = ace.edit("editor");
+    editor.$blockScrolling = Infinity;
+    editor.setTheme("ace/theme/monokai");
+    editor.setFontSize(editorFontSize);
+    editor.getSession().setMode("ace/mode/java");
+    
+    setEditorCode(initcode);
+    
+    // run the editor's code
+    $('#run').click(function() {
+        var code = editor.getSession().getValue();
+        try {
+            setNewSketch(code);
+            $('#error-message').text('');
+        } catch(err) {
+            $('#error-message').text(err);
+        }
+    });
+    
+    // increase editor font size
+    $('#fontup').click(function() {
+        editor.setFontSize(++editorFontSize);
+        $('#fontSize').text(editorFontSize);
+    });
+    
+    // decrease editor font size
+    $('#fontdown').click(function() {
+        editor.setFontSize(--editorFontSize);
+        $('#fontSize').text(editorFontSize);
+    });
+    
+    // display the font size
+    $('#fontSize').text(editorFontSize);
+});
