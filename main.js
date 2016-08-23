@@ -107,8 +107,7 @@ var processFile = function(event, file) {
                 });
                 break;
             default:
-                console.log('not a valid file format. should be .pde or .zip - ');
-                console.log('file.name = ' + f.name);
+                log('not a valid file format. should be .pde or .zip where file.name = ', file.name);
                 break;
         }                    
     } else {
