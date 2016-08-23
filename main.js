@@ -10,6 +10,7 @@ var numFiles = 0;
 var numFilesProcessed = 0;
 var collection = []; // the files collection, whether zip or otherwise
 var windex = 0; // used by arrow keys to set the current index
+var requireZip = true; // depends on state of the checkbox #cb-require-zip
 
 // logger that prevents circular object reference in javascript
 var log = function(msg, obj) {
@@ -78,13 +79,17 @@ var processFile = function(event, file) {
         var ext = a.pop(); // the extension is the last element of the array
         switch(ext) {
             case 'pde':
-                collection.push({
-                    name : file.name,
-                    code : event.target.result
-                });
-                continueProcessing();
+                if(!requireZip) {
+                    log('pushing pde = ', file.name);
+                    collection.push({
+                        name : file.name,
+                        code : event.target.result
+                    });
+                    continueProcessing();
+                }
                 break;
             case 'zip':
+                log('pushing zip = ', file.name);
                 var compressed = new JSZip();
                 compressed.loadAsync(file).then(function(contents) {
                     // contents is an array of compressed files
@@ -94,10 +99,26 @@ var processFile = function(event, file) {
                             // do nothing
                         } else {
                             compressed.file(path).async('string').then(function(text) {
-                                collection.push({
-                                    name : path.split('/').pop(),
-                                    code : text
-                                });
+                                // repeating some code now - this is an internal validation of the zip file
+                                // only add PDE for now
+                                // TODO: fix #2 #3 and #4 here
+                                var n = path.split('/').pop(); // name
+                                var c = text; // file contents
+                                var a = path.split('/').pop().split('.'); // parts split by periods
+                                if(a.length > 1) {
+                                    var ext = a.pop();
+                                    switch(ext) {
+                                        case 'pde':
+                                            collection.push({
+                                                name : n,
+                                                code : c
+                                            });
+                                            break;
+                                        default:
+                                            // skip - do nothing
+                                            break;
+                                    }
+                                }
                                 continueProcessing();
                             });
                         }
@@ -117,6 +138,7 @@ var processFile = function(event, file) {
 
 // process all the dropped files
 var processFiles = function(files) {
+    requireZip = $('#cb-require-zip').prop('checked');
     numFiles = files.length;
     for(var i = 0; i < files.length; i++) {
         var f = files[i];
