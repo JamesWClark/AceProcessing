@@ -80,7 +80,6 @@ var processFile = function(event, file) {
         switch(ext) {
             case 'pde':
                 if(!requireZip) {
-                    log('pushing pde = ', file.name);
                     collection.push({
                         name : file.name,
                         code : event.target.result
@@ -89,7 +88,6 @@ var processFile = function(event, file) {
                 }
                 break;
             case 'zip':
-                log('pushing zip = ', file.name);
                 var compressed = new JSZip();
                 compressed.loadAsync(file).then(function(contents) {
                     // contents is an array of compressed files
