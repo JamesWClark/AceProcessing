@@ -1,45 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Ace Processing</title>
-    <link href="main.css" rel="stylesheet"/>
+   <title>Ace Processing</title>
+   <link href="main.css" rel="stylesheet" />
+   <link href="https://rawgit.com/JamesWClark/RadCSS/master/rad.css" rel="stylesheet" />
 </head>
+
 <body>
-    <h1 id="file-name"></h1>
-    <div id="support-message"></div>
-    <div id="error-message"></div>
+   <!-- MESSAGING -->
+   <h1 id="file-name"></h1>
+   <div id="support-message"></div>
+   <div id="error-message"></div>
 
-    <div id="canvas-container"><canvas id="sketch"></canvas></div>
 
-    <script id="processing-code" type="text/processing" data-processing-target="sketch">void setup() {
-    size(500,500);
+   <!-- PROCESSING SKETCH -->
+   <div id="canvas-container">
+      <canvas id="sketch"></canvas>
+   </div>
+
+   <!-- STARTER CODE ON PAGE LOAD -->
+   <script id="processing-code" type="text/processing" data-processing-target="sketch">void setup() {
+    size(480,320);
 }
 
 void draw() {
     background(125);
     ellipse(mouseX, mouseY, 50, 50);
-}</script>
+}
+</script>
 
-    <div>
-        <button id="run">Run</button>
-        <input type="file" id="files" name="files[]" multiple />
-    </div>
-    <div id="fontStuff">
-        <button class="monospace" id="fontup">+</button>
-        <button class="monospace" id="fontdown">-</button>
-        <span>Font size: </span><span id="fontSize"></span>
-        <div id="container-require-zip">
-            <input id="cb-require-zip" type="checkbox" checked><label for="cb-require-zip">Require ZIP extension</label>
-        </div>
-    </div>
-    
-    <pre id="editor"></pre>
+   <!-- UI CONTROLS -->
+   <div>
+      <button id="run">Run</button>
+      <input type="file" id="files" name="files[]" multiple />
+   </div>
+   <div id="fontStuff">
+      <button class="monospace" id="fontup">+</button>
+      <button class="monospace" id="fontdown">-</button>
+      <span>Font size: </span><span id="fontSize"></span>
+      <div id="container-require-zip">
+         <input id="cb-require-zip" type="checkbox" checked>
+         <label for="cb-require-zip">Require ZIP extension</label>
+      </div>
+   </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.0/processing.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.1/jszip.min.js"></script>
-    <script src="main.js"></script>
+   <!-- ACE EDITOR -->
+   <div class="flex">
+      <div class="x6">
+         <pre id="editor"></pre>
+      </div>
+      <div id="files-list-container" class="x2">
+         <div>Files</div>
+         <div id="files-list"></div>
+      </div>
+   </div>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.0/processing.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js" charset="utf-8"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.1/jszip.min.js"></script>
+   <script src="main.js"></script>
 
 </body>
+
 </html>
