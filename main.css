@@ -1,3 +1,7 @@
+pre {
+  margin: 0;
+}
+
 #editor {
     height: 400px;
 }
@@ -36,4 +40,8 @@
 }
 #container-require-zip {
     margin: 4px 2px 4px 0;
+}
+
+#files-list-container {
+  padding-left: 7px;
 }
