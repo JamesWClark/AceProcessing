@@ -89,6 +89,11 @@ var processFile = function(event, file) {
                 break;
             case 'zip':
                 var compressed = new JSZip();
+                var codeBall = {
+                    name : '',
+                    code : '',
+                    paths : []
+                };
                 compressed.loadAsync(file).then(function(contents) {
                     // contents is an array of compressed files
                     contents.forEach(function(path, zipObject) {
@@ -103,17 +108,17 @@ var processFile = function(event, file) {
                                 var n = path.split('/').pop(); // name
                                 var c = text; // file contents
                                 var a = path.split('/').pop().split('.'); // parts split by periods
+                                codeBall.paths.push(path);
+                                
                                 if(a.length > 1) {
                                     var ext = a.pop();
                                     switch(ext) {
                                         case 'pde':
-                                            collection.push({
-                                                name : n,
-                                                code : c
-                                            });
+                                            codeBall.name = n;
+                                            codeBall.code = c;
+                                            collection.push(codeBall);
                                             break;
                                         default:
-                                            // skip - do nothing
                                             break;
                                     }
                                 }
@@ -186,6 +191,14 @@ var pimp = function(index) {
         $('.pjsconsole .console').html('boom');
         setNewSketch(f.code);
         $('#error-message').text('');
+        if(f.paths) {
+            var filesList = $('#files-list');
+            filesList.html('');
+            f.paths.forEach(function(path) {
+                filesList.append('<div>' + path + '</div>');
+            });
+        }
+        
     } catch(err) {
         $('#error-message').text(err);
     }
