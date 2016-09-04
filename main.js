@@ -200,7 +200,8 @@ var setNewSketch = function(code) {
 // called by keydown - flips through sketches and code
 var pimp = function(index) {
     var f = collection[index];
-    $('#file-name').text(index + ": " + f.name);
+    $('#file-name-header').text(index + ": " + f.name);
+    $('#file-name-zip-header').text(f.name);
     $('#error-message').text('');
     setNewSketch(f.code);
     setEditorCode(f.code);
