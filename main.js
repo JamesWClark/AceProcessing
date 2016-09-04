@@ -11,7 +11,7 @@ var numFilesProcessed = 0;
 var collection = []; // the files collection, whether zip or otherwise
 var windex = 0; // used by arrow keys to set the current index
 var requireZip = true; // depends on state of the checkbox #cb-require-zip
-var consoleRelocated = false;
+var consoleRelocated = false; // by default, the logger will not be relocated in the dom
 
 // logger that prevents circular object reference in javascript
 var log = function(msg, obj) {
@@ -89,6 +89,7 @@ var processFile = function(event, file) {
                 }
                 break;
             case 'zip':
+                var hasCode = false;
                 var compressed = new JSZip();
                 var codeBall = {
                     name : '',
@@ -115,13 +116,16 @@ var processFile = function(event, file) {
                                     var ext = a.pop();
                                     switch(ext) {
                                         case 'pde':
+                                            hasCode = true;
                                             codeBall.name = n;
-                                            codeBall.code = c;
-                                            collection.push(codeBall);
+                                            codeBall.code += '//#####    ' + n + '    #####\n\n' + c;
                                             break;
                                         default:
                                             break;
                                     }
+                                }
+                                if(hasCode) {
+                                    collection.push(codeBall);
                                 }
                                 continueProcessing();
                             });
@@ -134,7 +138,7 @@ var processFile = function(event, file) {
             default:
                 log('not a valid file format. should be .pde or .zip where file.name = ', file.name);
                 break;
-        }                    
+        }
     } else {
         log('not a valid file');
     }
@@ -230,19 +234,16 @@ $(document).ready(function() {
     });
     
     $(document).keydown(function(e){
-
         // left arrow
         if ((e.keyCode || e.which) == 37 && windex > 0) {
             windex--;
             pimp(windex);
         }
-
         // right arrow
         if ((e.keyCode || e.which) == 39 && windex < collection.length - 1) {
             windex++;
             pimp(windex);
         }
-
         // prevent arrow key scrolling page
         if([33,34,35,36,37,38,39,40].indexOf(e.which) !== -1) {
               e.preventDefault();
@@ -281,6 +282,7 @@ $(document).ready(function() {
         e.stopPropagation();
     });
     
+    // repair styles after dragleave
     $(document).on('dragleave', function() {
         $('*').removeClass('see-through');
     });
