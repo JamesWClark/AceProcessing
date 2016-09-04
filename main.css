@@ -71,6 +71,7 @@ pre {
 
 #canvas-container {
     background-image: url('graythread.jpg');
+    border: solid #E6E6E6 1px;
     overflow: hidden;
     height: 500px;
 }
@@ -90,6 +91,7 @@ pre {
 body {
     background-color: #e6e9e9;
 }
+
 #run {
     background-color: limegreen;
     border-color: palegreen;
@@ -102,7 +104,9 @@ body {
 }
 
 #controls-container {
-    padding-right: 14px;
+    overflow: hidden;
+    /* overflow-y: scroll; */
+    margin-right: 14px;
 }
 
 #run-button-container {
