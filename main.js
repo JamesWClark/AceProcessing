@@ -179,34 +179,37 @@ var setEditorCode = function(code) {
 
 // update canvas and editor with new code
 var setNewSketch = function(code) {
-    Processing.getInstanceById('sketch').exit();
+    if(Processing.getInstanceById('sketch')) {
+        Processing.getInstanceById('sketch').exit();
+    }
     var container = $('#canvas-container');
     var canvas = document.createElement('canvas');
     canvas.id = 'sketch';
     container.html('');
     container.append(canvas);
-    new Processing(canvas, code);
+    //new Processing(canvas, code);
+    try {
+        new Processing(canvas, code);
+    } catch (err) {
+        $('#error-message').html(err);
+    }
 };
 
 // called by keydown - flips through sketches and code
 var pimp = function(index) {
     var f = collection[index];
     $('#file-name').text(index + ": " + f.name);
-    try {
-        setNewSketch(f.code);
-        $('#error-message').text('');
-        if(f.paths) {
-            $('#files-list-container').show(); 
-            var filesList = $('#files-list');
-            filesList.html('');
-            f.paths.forEach(function(path) {
-                filesList.append('<div>' + path + '</div>');
-            });
-        }
-    } catch(err) {
-        $('#error-message').text(err);
-    }
+    $('#error-message').text('');
+    setNewSketch(f.code);
     setEditorCode(f.code);
+    if(f.paths) {
+        $('#files-list-container').show(); 
+        var filesList = $('#files-list');
+        filesList.html('');
+        f.paths.forEach(function(path) {
+            filesList.append('<div>' + path + '</div>');
+        });
+    }
 };
 
 $(document).ready(function() {
@@ -229,6 +232,7 @@ $(document).ready(function() {
             setNewSketch(code);
             $('#error-message').text('');
         } catch(err) {
+            log(abc);
             $('#error-message').text(err);
         }
     });
