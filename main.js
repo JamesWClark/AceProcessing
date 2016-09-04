@@ -89,7 +89,8 @@ var processFile = function(event, file) {
                 }
                 break;
             case 'zip':
-                var hasCode = false;
+                var hasCode = false; // a flag for code is found, enables adding to collection
+                var stored = false; // a flag to prevent adding contents to collection more than once
                 var compressed = new JSZip();
                 var codeBall = {
                     name : '',
@@ -112,6 +113,7 @@ var processFile = function(event, file) {
                                 var a = path.split('/').pop().split('.'); // parts split by periods
                                 codeBall.paths.push(path);
                                 
+                                // has extension
                                 if(a.length > 1) {
                                     var ext = a.pop();
                                     switch(ext) {
@@ -124,8 +126,9 @@ var processFile = function(event, file) {
                                             break;
                                     }
                                 }
-                                if(hasCode) {
+                                if(hasCode && !stored) {
                                     collection.push(codeBall);
+                                    stored = true;
                                 }
                                 continueProcessing();
                             });
