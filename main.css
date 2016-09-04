@@ -1,5 +1,5 @@
 pre {
-  margin: 0;
+    margin: 0;
 }
 
 #editor {
@@ -7,7 +7,7 @@ pre {
 }
 
 #sketch {
-    /* cursor: none; */
+    cursor: none;
 }
 
 #support-message {
@@ -18,17 +18,31 @@ pre {
     font-weight: bold;
     padding: 7px;
 }
+
 #error-message {
-  color: red;
+    color: red;
 }
 
 .pjsconsole {
-    height: 200px !important;
+    background-color: #d8d8d8 !important;
+    height: 50px !important;
     position: initial !important;
 }
+
 .pjsconsole .console {
-    height: 200px !important ;
+    background-color: #d8d8d8 !important;
+    color: #000 !important;
+    font-family: monospace !important;
+    height: 50px !important;
     position: initial !important;
+}
+
+.pjsconsole .dragger {
+    display: none !important;
+}
+
+.pjsconsole .closer {
+    display: none !important;
 }
 
 .monospace {
@@ -38,10 +52,63 @@ pre {
 #fontStuff {
     margin-top: 7px;
 }
+
 #container-require-zip {
     margin: 4px 2px 4px 0;
 }
 
 #files-list-container {
-  padding-left: 7px;
+    display: none;
+}
+
+#main {
+    background-color: #fff;
+    margin: 0 auto 0 auto;
+    max-width: 1024px;
+    min-width: 891px;
+    padding: 14px;
+}
+
+#canvas-container {
+    background-image: url('graythread.jpg');
+    overflow: hidden;
+    height: 500px;
+}
+
+#ui-canvas-container {
+    margin-bottom: 14px;
+}
+
+#editor-container {
+    margin-top: 14px;
+}
+
+#console-container {
+    margin-top: 14px;
+}
+
+body {
+    background-color: #e6e9e9;
+}
+#run {
+    background-color: limegreen;
+    border-color: palegreen;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 7px 0 7px;
+    text-align: center;    
+    width: 100%;
+}
+
+#controls-container {
+    padding-right: 14px;
+}
+
+#run-button-container {
+    margin-bottom: 7px;
+}
+
+#file-name {
+    margin-top: 0;
 }

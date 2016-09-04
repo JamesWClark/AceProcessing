@@ -8,52 +8,61 @@
 </head>
 
 <body>
-   <!-- MESSAGING -->
-   <h1 id="file-name"></h1>
-   <div id="support-message"></div>
-   <div id="error-message"></div>
+   <div id="main">
+      
+      <!-- MESSAGING -->
+      <h1 id="file-name">Ace Processing</h1>
+      <div id="support-message"></div>
+      <div id="error-message"></div>
 
+      <div id="ui-canvas-container">
+         
+         <div class="flex">
+           
+            <!-- UI CONTROLS & FILES LIST -->   
+            <div class="x1">
+               
+               <div id="controls-container">
+                  <div>
+                     <div id="run-button-container"><button id="run">Play</button></div>
+                     <input type="file" id="files" name="files[]" multiple />
+                  </div>
+                  <div id="fontStuff">
+                     <button class="monospace" id="fontup">+</button>
+                     <button class="monospace" id="fontdown">-</button>
+                     <span>Editor font size: </span><span id="fontSize"></span>
+                     <div id="container-require-zip">
+                        <input id="cb-require-zip" type="checkbox" checked>
+                        <label for="cb-require-zip">Require ZIP extension</label>
+                     </div>
+                  </div>
 
-   <!-- PROCESSING SKETCH -->
-   <div id="canvas-container">
-      <canvas id="sketch"></canvas>
-   </div>
+                  <div id="files-list-container">
+                     <div>Files</div>
+                     <div id="files-list"></div>
+                  </div>
+               </div>
+            </div>
+            
+            <!-- PROCESSING SKETCH -->   
+            <div class="x3">
+               <div id="canvas-container">
+                  <canvas id="sketch"></canvas>
+               </div>
+            </div>
+            
+         </div>
+         
+         <div id="console-container"></div>
 
-   <!-- STARTER CODE ON PAGE LOAD -->
-   <script id="processing-code" type="text/processing" data-processing-target="sketch">void setup() {
-    size(480,320);
-}
-
-void draw() {
-    background(125);
-    ellipse(mouseX, mouseY, 50, 50);
-}
-</script>
-
-   <!-- UI CONTROLS -->
-   <div>
-      <button id="run">Run</button>
-      <input type="file" id="files" name="files[]" multiple />
-   </div>
-   <div id="fontStuff">
-      <button class="monospace" id="fontup">+</button>
-      <button class="monospace" id="fontdown">-</button>
-      <span>Font size: </span><span id="fontSize"></span>
-      <div id="container-require-zip">
-         <input id="cb-require-zip" type="checkbox" checked>
-         <label for="cb-require-zip">Require ZIP extension</label>
-      </div>
-   </div>
-
-   <!-- ACE EDITOR -->
-   <div class="flex">
-      <div class="x6">
-         <pre id="editor"></pre>
-      </div>
-      <div id="files-list-container" class="x2">
-         <div>Files</div>
-         <div id="files-list"></div>
-      </div>
+         <!-- ACE EDITOR -->
+         <div id="editor-container" class="flex">
+            <div class="x6">
+               <pre id="editor"></pre>
+            </div>
+         </div>
+         
+      </div>   
    </div>
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -61,6 +70,28 @@ void draw() {
    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js" charset="utf-8"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.1/jszip.min.js"></script>
    <script src="main.js"></script>
+   
+   <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+     ga('create', 'UA-31503850-5', 'auto');
+     ga('send', 'pageview');
+   </script>
+
+   <!-- STARTER CODE ON PAGE LOAD -->
+   <script id="processing-code" type="text/processing" data-processing-target="sketch">void setup() {
+    size(768,500);
+    println("print() and println() commands will log here");
+}
+
+void draw() {
+    background(125);
+    ellipse(mouseX, mouseY, 50, 50);
+}
+</script>      
 
 </body>
 

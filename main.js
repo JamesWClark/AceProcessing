@@ -11,6 +11,7 @@ var numFilesProcessed = 0;
 var collection = []; // the files collection, whether zip or otherwise
 var windex = 0; // used by arrow keys to set the current index
 var requireZip = true; // depends on state of the checkbox #cb-require-zip
+var consoleRelocated = false;
 
 // logger that prevents circular object reference in javascript
 var log = function(msg, obj) {
@@ -192,13 +193,13 @@ var pimp = function(index) {
         setNewSketch(f.code);
         $('#error-message').text('');
         if(f.paths) {
+            $('#files-list-container').show(); 
             var filesList = $('#files-list');
             filesList.html('');
             f.paths.forEach(function(path) {
                 filesList.append('<div>' + path + '</div>');
             });
         }
-        
     } catch(err) {
         $('#error-message').text(err);
     }
@@ -206,16 +207,25 @@ var pimp = function(index) {
 };
 
 $(document).keydown(function(e){
+    
     // left arrow
-    if ((e.keyCode || e.which) == 37 && windex > 0) {   
+    if ((e.keyCode || e.which) == 37 && windex > 0) {
         windex--;
         pimp(windex);
     }
+    
     // right arrow
     if ((e.keyCode || e.which) == 39 && windex < collection.length - 1) {
         windex++;
         pimp(windex);
-    }   
+    }
+    
+    // prevent arrow key scrolling page
+    if([33,34,35,36,37,38,39,40].indexOf(e.which) !== -1) {
+          e.preventDefault();
+          return false;
+    }
+    return true;
 });
 
 $(document).ready(function() {
@@ -256,4 +266,11 @@ $(document).ready(function() {
     
     // display the font size
     $('#fontSize').text(editorFontSize);
+    
+    $(document).on('DOMNodeInserted', function(e) {
+        if(!consoleRelocated && e.target.className.indexOf('pjsconsole') > -1) {
+            consoleRelocated = true;
+            $('.pjsconsole').appendTo('#console-container');
+        }
+    });
 });
