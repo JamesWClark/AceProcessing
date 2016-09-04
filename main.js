@@ -205,28 +205,6 @@ var pimp = function(index) {
     setEditorCode(f.code);
 };
 
-$(document).keydown(function(e){
-    
-    // left arrow
-    if ((e.keyCode || e.which) == 37 && windex > 0) {
-        windex--;
-        pimp(windex);
-    }
-    
-    // right arrow
-    if ((e.keyCode || e.which) == 39 && windex < collection.length - 1) {
-        windex++;
-        pimp(windex);
-    }
-    
-    // prevent arrow key scrolling page
-    if([33,34,35,36,37,38,39,40].indexOf(e.which) !== -1) {
-          e.preventDefault();
-          return false;
-    }
-    return true;
-});
-
 $(document).ready(function() {
     verifyFileAPISupport();
     registerHandlers();
@@ -249,6 +227,28 @@ $(document).ready(function() {
         } catch(err) {
             $('#error-message').text(err);
         }
+    });
+    
+    $(document).keydown(function(e){
+
+        // left arrow
+        if ((e.keyCode || e.which) == 37 && windex > 0) {
+            windex--;
+            pimp(windex);
+        }
+
+        // right arrow
+        if ((e.keyCode || e.which) == 39 && windex < collection.length - 1) {
+            windex++;
+            pimp(windex);
+        }
+
+        // prevent arrow key scrolling page
+        if([33,34,35,36,37,38,39,40].indexOf(e.which) !== -1) {
+              e.preventDefault();
+              return false;
+        }
+        return true;
     });
     
     // increase editor font size
@@ -279,6 +279,10 @@ $(document).ready(function() {
         $('*').addClass('see-through');
         e.preventDefault();
         e.stopPropagation();
+    });
+    
+    $(document).on('dragleave', function() {
+        $('*').removeClass('see-through');
     });
     
     // file drop anywhere on page
