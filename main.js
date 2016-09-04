@@ -189,7 +189,6 @@ var pimp = function(index) {
     var f = collection[index];
     $('#file-name').text(index + ": " + f.name);
     try {
-        $('.pjsconsole .console').html('boom');
         setNewSketch(f.code);
         $('#error-message').text('');
         if(f.paths) {
@@ -267,10 +266,31 @@ $(document).ready(function() {
     // display the font size
     $('#fontSize').text(editorFontSize);
     
+    // watch for the pjcsonole to appear in dom; move it
     $(document).on('DOMNodeInserted', function(e) {
         if(!consoleRelocated && e.target.className.indexOf('pjsconsole') > -1) {
             consoleRelocated = true;
             $('.pjsconsole').appendTo('#console-container');
+        }
+    });
+    
+    // prevent default drag and gives visual indicator
+    $(document).on('dragover dragenter', function(e) {
+        $('*').addClass('see-through');
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    
+    // file drop anywhere on page
+    $(document).on('drop', function(e){
+        $('*').removeClass('see-through');
+        if(e.originalEvent.dataTransfer){
+            if(e.originalEvent.dataTransfer.files.length) {
+                e.preventDefault();
+                e.stopPropagation();
+                reset();
+                processFiles(e.originalEvent.dataTransfer.files);
+            }   
         }
     });
 });

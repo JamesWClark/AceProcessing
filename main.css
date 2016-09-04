@@ -112,3 +112,7 @@ body {
 #file-name {
     margin: 0;
 }
+
+.see-through {
+    opacity: 0.8;
+}
