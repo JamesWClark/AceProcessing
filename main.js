@@ -93,7 +93,7 @@ var processFile = function(event, file) {
                 var stored = false; // a flag to prevent adding contents to collection more than once
                 var compressed = new JSZip();
                 var codeBall = {
-                    name : '',
+                    name : file.name,
                     code : '',
                     paths : []
                 };
@@ -119,7 +119,6 @@ var processFile = function(event, file) {
                                     switch(ext) {
                                         case 'pde':
                                             hasCode = true;
-                                            codeBall.name = n;
                                             codeBall.code += '//#####    ' + n + '    #####\n\n' + c;
                                             break;
                                         default:
