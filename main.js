@@ -160,6 +160,9 @@ var processFiles = function(files) {
         })(f);
         reader.readAsText(f);
     }
+    if(numFiles > 1) {
+        $('#sketch-previous, #sketch-next').show();
+    }
 };
 
 // fires when file(s) dropped
@@ -197,7 +200,7 @@ var setNewSketch = function(code) {
     }
 };
 
-// called by keydown - flips through sketches and code
+// called by keydown or button click - flips through sketches and code
 var pimp = function(index) {
     var f = collection[index];
     $('#file-name-header').text(index + ": " + f.name);
@@ -212,6 +215,18 @@ var pimp = function(index) {
         f.paths.forEach(function(path) {
             filesList.append('<div>' + path + '</div>');
         });
+    }
+    if(windex > 0) {
+        $('#sketch-previous').prop('disabled', false);
+    }
+    if(windex < collection.length - 1) {
+        $('#sketch-next').prop('disabled', false);
+    }
+    if(windex === 0) {
+        $('#sketch-previous').prop('disabled', true);
+    }
+    if(windex === collection.length - 1) {
+        $('#sketch-next').prop('disabled', true);
     }
 };
 
@@ -237,6 +252,20 @@ $(document).ready(function() {
         } catch(err) {
             log(abc);
             $('#error-message').text(err);
+        }
+    });
+    
+    $('#sketch-previous').click(function() {
+        if(windex > 0) {
+            windex--;
+            pimp(windex);
+        }
+    });
+    
+    $('#sketch-next').click(function() {
+        if(windex < collection.length - 1) {
+            windex++;
+            pimp(windex);
         }
     });
     

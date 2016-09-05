@@ -93,14 +93,7 @@ body {
 }
 
 #run {
-    background-color: limegreen;
-    border-color: palegreen;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 7px 0 7px;
-    text-align: center;    
-    width: 100%;
+    flex: 8;
 }
 
 #controls-container {
@@ -111,6 +104,7 @@ body {
 
 #run-button-container {
     margin-bottom: 7px;
+    display: flex;
 }
 
 #file-name-header {
@@ -119,4 +113,23 @@ body {
 
 .see-through {
     opacity: 0.8;
+}
+.btn-green {
+        background-color: limegreen;
+    border-color: palegreen;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 7px 0 7px;
+    text-align: center;
+}
+
+#sketch-previous, #sketch-next {
+    display: none;
+    flex: 1;
+}
+
+#sketch-previous:disabled, #sketch-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
