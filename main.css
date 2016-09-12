@@ -6,7 +6,7 @@ pre {
     height: 400px;
 }
 
-#sketch {
+.cursor-none {
     cursor: none;
 }
 
@@ -115,7 +115,7 @@ body {
     opacity: 0.8;
 }
 .btn-green {
-        background-color: limegreen;
+    background-color: limegreen;
     border-color: palegreen;
     color: white;
     font-size: 14px;

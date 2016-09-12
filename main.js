@@ -311,6 +311,17 @@ $(document).ready(function() {
         }
     });
     
+    // show or hide cursor based on checkbox
+    $('#cb-show-cursor').change(function() {
+        if(this.checked) {
+            $('#sketch').addClass('cursor-none');
+            log('checked = ', this.checked);
+        } else {
+            $('#sketch').removeClass('cursor-none');
+            log('checked = ', this.checked);
+        }
+    });
+    
     // prevent default drag and gives visual indicator
     $(document).on('dragover dragenter', function(e) {
         $('*').addClass('see-through');
