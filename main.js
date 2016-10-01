@@ -353,9 +353,16 @@ $(document).ready(function() {
             c.width = w;
             c.height = h;
             var code = editor.getValue();
-            log(code);
+
+            var indexOfSize = code.indexOf('size(');
+            var indexOfNextSemicolon = code.indexOf(';', indexOfSize);
+            var sizeText = code.substring(indexOfSize, indexOfNextSemicolon + 1);
+            var newSize = 'size(' + w + ',' + h + ');'
+            code = code.replace(sizeText, newSize);
+            setNewSketch(code);
+            editor.setValue(code, -1);
         }
-    })
+    });
     
     $('#resize-canvas').click(function() {
         $('#sketch').resizeCanvas(300, 400);
