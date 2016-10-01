@@ -364,7 +364,28 @@ $(document).ready(function() {
         }
     });
     
-    $('#resize-canvas').click(function() {
-        $('#sketch').resizeCanvas(300, 400);
-    })
+    $('#re5x1').click(function() {
+        $('#sketch').resizeCanvas(500, 100);
+    });
+    
+    $('#re4x2').click(function() {
+        $('#sketch').resizeCanvas(400, 200);
+    });
+    
+    $('#re3x3').click(function() {
+        $('#sketch').resizeCanvas(300, 300);
+    });
+    
+    $('#re2x4').click(function() {
+        $('#sketch').resizeCanvas(200, 400);
+    });
+
+    $('#re1x5').click(function() {
+        $('#sketch').resizeCanvas(100, 500);
+    });
+    
+    $('#re7x5').click(function() {
+        $('#sketch').resizeCanvas(768, 500);
+    });
+
 });
