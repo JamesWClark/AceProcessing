@@ -346,4 +346,18 @@ $(document).ready(function() {
             }   
         }
     });
+    
+    $.fn.extend({
+        resizeCanvas: function(w, h) {
+            var c = $(this)[0];
+            c.width = w;
+            c.height = h;
+            var code = editor.getValue();
+            log(code);
+        }
+    })
+    
+    $('#resize-canvas').click(function() {
+        $('#sketch').resizeCanvas(300, 400);
+    })
 });

@@ -2,6 +2,10 @@ pre {
     margin: 0;
 }
 
+#sketch {
+    resize: both;
+}
+
 #editor {
     height: 400px;
 }
