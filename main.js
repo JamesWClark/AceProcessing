@@ -387,5 +387,32 @@ $(document).ready(function() {
     $('#re7x5').click(function() {
         $('#sketch').resizeCanvas(768, 500);
     });
+    
+    $(document).on('keydown', function(e) {
+        // disable key repeat
+        // http://stackoverflow.com/questions/9098901/how-to-disable-repetitive-keydown-in-jquery
+        var key = e.keyCode || e.which;
+        log(key);
+        switch(key) {
+            case 49: //1
+                $('#sketch').resizeCanvas(500, 100);
+                break;
+            case 50: //2
+                $('#sketch').resizeCanvas(400, 200);
+                break;
+            case 51: //3
+                $('#sketch').resizeCanvas(300, 300);
+                break;
+            case 52: //4
+                $('#sketch').resizeCanvas(200, 400);
+                break;
+            case 53: //5
+                $('#sketch').resizeCanvas(100, 500);
+                break;
+            case 54: //6
+                $('#sketch').resizeCanvas(768, 500);
+                break;
+        }
+    });
 
 });
