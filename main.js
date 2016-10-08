@@ -347,18 +347,24 @@ $(document).ready(function() {
         }
     });
     
+    // prepends or modifies the size() function and resizes the canvas accordingly 
     $.fn.extend({
         resizeCanvas: function(w, h) {
-            var c = $(this)[0];
-            c.width = w;
-            c.height = h;
+            var canvas = $(this)[0];
             var code = editor.getValue();
-
-            var indexOfSize = code.indexOf('size(');
-            var indexOfNextSemicolon = code.indexOf(';', indexOfSize);
-            var sizeText = code.substring(indexOfSize, indexOfNextSemicolon + 1);
+            var sizePattern = /(\bsize) *[(] *\d* *, *\d* *[)] *;/g;
             var newSize = 'size(' + w + ',' + h + ');'
-            code = code.replace(sizeText, newSize);
+            var match = sizePattern.exec(code);
+                
+            // code contains size() command
+            if(match) {
+                code = code.replace(sizePattern, newSize);
+            } else {
+                code = newSize + '\n' + code;    
+            }
+            
+            canvas.width  = w;
+            canvas.height = h;
             setNewSketch(code);
             editor.setValue(code, -1);
         }
@@ -393,7 +399,6 @@ $(document).ready(function() {
         // if it's not a text area, then resize (which re-runs the editor code);
         if(!$(':focus').is('textarea')) {
             var key = e.keyCode || e.which;
-            log(key);
             switch(key) {
                 case 49: //1
                     $('#sketch').resizeCanvas(500, 100);
