@@ -56,19 +56,79 @@ var verifyFileAPISupport = function() {
     } else {
         $('#support-message').show();
         $('#support-message').text('The File APIs are not fully supported in this browser.');
-    }    
+    }
 };
 
 // checks if all the files are finished processing
-var continueProcessing = function() {
+var continueUnzip = function() {
     numFilesProcessed++;
     
     // we're done processing files - load the first one
-    if(numFilesProcessed === numFiles) {
-        console.log(collection);
+    if(numFilesProcessed === numFiles && collection.length > 0) {
         pimp(0);
     }
 };
+
+var continueOneZip = function(codeBall, count, length) {
+    if(count === length) {
+        collection.push(codeBall);
+        pimp(0);
+    }
+    log('count / length = ', count + '/' + length);
+    log('num/num = ', numFilesProcessed + '/' + numFiles);
+    if(count === length && numFilesProcessed === numFiles) {
+        
+    }
+};
+
+var decompressAndExtractCode = function(file) {
+    var compressed = new JSZip();
+    var codeBall = {
+        name : file.name,
+        code : [],
+        paths : []
+    };
+    compressed.loadAsync(file).then(function(contents) {
+        var contentLength = Object.keys(contents.files).length;
+        var numCodeBallsProcessed = 0;
+        // contents is an array of compressed files
+        contents.forEach(function(path, zipObject) {
+            
+            var isFolder = zipObject.dir;
+            
+            if(isFolder) {
+                ++numCodeBallsProcessed;
+            } else {
+                compressed.file(path).async('string').then(function(text) {
+                    // repeating some code now - this is an internal validation of the zip file
+                    // only add PDE for now
+                    // TODO: fix #2 #3 and #4 here
+                    var n = path.split('/').pop(); // name
+                    var c = text; // file contents
+                    var a = path.split('/').pop().split('.'); // parts split by periods
+                    codeBall.paths.push(path);
+
+                    // has extension
+                    if(a.length > 1) {
+                        var ext = a.pop();
+                        switch(ext) {
+                            case 'pde':
+                                log('pushing code = ', c);
+                                codeBall.code.push(c);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    continueOneZip(codeBall, ++numCodeBallsProcessed, contentLength);
+                });
+            }
+        });
+    }, function() { // error handler
+        log('zip error?')
+    });
+    continueUnzip();
+}
 
 // process a single file
 var processFile = function(event, file) {
@@ -83,59 +143,14 @@ var processFile = function(event, file) {
                 if(!requireZip) {
                     collection.push({
                         name : file.name,
-                        code : event.target.result
+                        code : [ event.target.result ],
+                        paths : [ file.name ]
                     });
-                    continueProcessing();
+                    continueUnzip();
                 }
                 break;
             case 'zip':
-                var hasCode = false; // a flag for code is found, enables adding to collection
-                var stored = false; // a flag to prevent adding contents to collection more than once
-                var compressed = new JSZip();
-                var codeBall = {
-                    name : file.name,
-                    code : '',
-                    paths : []
-                };
-                compressed.loadAsync(file).then(function(contents) {
-                    // contents is an array of compressed files
-                    contents.forEach(function(path, zipObject) {
-                        var isFolder = zipObject.dir;
-                        if(isFolder) {
-                            // do nothing
-                        } else {
-                            compressed.file(path).async('string').then(function(text) {
-                                // repeating some code now - this is an internal validation of the zip file
-                                // only add PDE for now
-                                // TODO: fix #2 #3 and #4 here
-                                var n = path.split('/').pop(); // name
-                                var c = text; // file contents
-                                var a = path.split('/').pop().split('.'); // parts split by periods
-                                codeBall.paths.push(path);
-                                
-                                // has extension
-                                if(a.length > 1) {
-                                    var ext = a.pop();
-                                    switch(ext) {
-                                        case 'pde':
-                                            hasCode = true;
-                                            codeBall.code += '//#####    ' + n + '    #####\n\n' + c;
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                if(hasCode && !stored) {
-                                    collection.push(codeBall);
-                                    stored = true;
-                                }
-                                continueProcessing();
-                            });
-                        }
-                    });
-                }, function() { // error handler
-                    log('zip error?')
-                });
+                decompressAndExtractCode(file);
                 break;
             default:
                 log('not a valid file format. should be .pde or .zip where file.name = ', file.name);
@@ -192,7 +207,7 @@ var setNewSketch = function(code) {
     canvas.id = 'sketch';
     container.html('');
     container.append(canvas);
-    //new Processing(canvas, code);
+
     try {
         new Processing(canvas, code);
     } catch (err) {
@@ -206,8 +221,15 @@ var pimp = function(index) {
     $('#file-name-header').text(index + ": " + f.name);
     $('#file-name-zip-header').text(f.name);
     $('#error-message').text('');
-    setNewSketch(f.code);
-    setEditorCode(f.code);
+
+    var code = '';
+  
+    for(var i = 0; i < f.code.length; i++) {
+        code += f.code[i] + '\n\n\n';
+    }
+    
+    setNewSketch(code);
+    setEditorCode(code);
     if(f.paths) {
         $('#files-list-container').show(); 
         var filesList = $('#files-list');
@@ -255,6 +277,7 @@ $(document).ready(function() {
         }
     });
     
+    // flip left
     $('#sketch-previous').click(function() {
         if(windex > 0) {
             windex--;
@@ -262,6 +285,7 @@ $(document).ready(function() {
         }
     });
     
+    // flip right
     $('#sketch-next').click(function() {
         if(windex < collection.length - 1) {
             windex++;
@@ -269,6 +293,7 @@ $(document).ready(function() {
         }
     });
     
+    // flip through projects
     $(document).keydown(function(e){
         // left arrow
         if ((e.keyCode || e.which) == 37 && windex > 0) {
