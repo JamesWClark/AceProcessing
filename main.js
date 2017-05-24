@@ -52,7 +52,7 @@ var reset = function() {
 var verifyFileAPISupport = function() {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-      // Great success! All the File APIs are supported.
+      // Great! Success! All the File APIs are supported.
     } else {
         $('#support-message').show();
         $('#support-message').text('The File APIs are not fully supported in this browser.');
@@ -70,14 +70,15 @@ var continueUnzip = function() {
 };
 
 var continueOneZip = function(codeBall, count, length) {
+    
+    // done processing one codeball
     if(count === length) {
         collection.push(codeBall);
-        pimp(0);
     }
-    log('count / length = ', count + '/' + length);
-    log('num/num = ', numFilesProcessed + '/' + numFiles);
+
+    // done processing all the files and decompressing all the zips
     if(count === length && numFilesProcessed === numFiles) {
-        
+        pimp(0);
     }
 };
 
@@ -113,7 +114,6 @@ var decompressAndExtractCode = function(file) {
                         var ext = a.pop();
                         switch(ext) {
                             case 'pde':
-                                log('pushing code = ', c);
                                 codeBall.code.push(c);
                                 break;
                             default:
@@ -153,10 +153,12 @@ var processFile = function(event, file) {
                 decompressAndExtractCode(file);
                 break;
             default:
+                numFilesProcessed++;
                 log('not a valid file format. should be .pde or .zip where file.name = ', file.name);
                 break;
         }
     } else {
+        numFilesProcessed++;
         log('not a valid file');
     }
 };
@@ -223,14 +225,14 @@ var pimp = function(index) {
     $('#error-message').text('');
 
     var code = '';
-  
-    for(var i = 0; i < f.code.length; i++) {
+    for (var i = 0; i < f.code.length; i++) {
         code += f.code[i] + '\n\n\n';
     }
     
     setNewSketch(code);
     setEditorCode(code);
-    if(f.paths) {
+    
+    if (f.paths) {
         $('#files-list-container').show(); 
         var filesList = $('#files-list');
         filesList.html('');
@@ -238,16 +240,13 @@ var pimp = function(index) {
             filesList.append('<div>' + path + '</div>');
         });
     }
-    if(windex > 0) {
+    if (windex > 0) {
         $('#sketch-previous').prop('disabled', false);
-    }
-    if(windex < collection.length - 1) {
+    } else if (windex < collection.length - 1) {
         $('#sketch-next').prop('disabled', false);
-    }
-    if(windex === 0) {
+    } else if (windex === 0) {
         $('#sketch-previous').prop('disabled', true);
-    }
-    if(windex === collection.length - 1) {
+    } else if (windex === collection.length - 1) {
         $('#sketch-next').prop('disabled', true);
     }
 };
@@ -272,7 +271,6 @@ $(document).ready(function() {
             setNewSketch(code);
             $('#error-message').text('');
         } catch(err) {
-            log(abc);
             $('#error-message').text(err);
         }
     });
@@ -340,10 +338,8 @@ $(document).ready(function() {
     $('#cb-show-cursor').change(function() {
         if(this.checked) {
             $('#sketch').addClass('cursor-none');
-            log('checked = ', this.checked);
         } else {
             $('#sketch').removeClass('cursor-none');
-            log('checked = ', this.checked);
         }
     });
     
@@ -443,8 +439,7 @@ $(document).ready(function() {
                 case 54: //6
                     $('#sketch').resizeCanvas(768, 500);
                     break;
-            }            
+            }
         }
     });
-
 });
