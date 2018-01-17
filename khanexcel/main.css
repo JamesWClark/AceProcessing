@@ -1,0 +1,22 @@
+table, tr, td {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+table tr th {
+    text-align: center;
+    width: 50px;
+}
+
+table tr td#student-name {
+    width: 200px;
+    text-align: left;
+}
+
+table tr td {
+    text-align: center;
+}
+
+table tr:nth-child(even) { background: #CCC }
+table tr:nth-child(odd) { background: #FFF }
