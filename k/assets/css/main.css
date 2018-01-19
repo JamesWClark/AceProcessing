@@ -7,6 +7,11 @@ table, tr, td {
 table tr th {
     text-align: center;
     width: 50px;
+    cursor: pointer;
+}
+
+table tr th:hover {
+    background: #DDD;
 }
 
 table tr td#student-name {
@@ -16,7 +21,11 @@ table tr td#student-name {
 
 table tr td {
     text-align: center;
+    cursor: pointer;
 }
 
 table tr:nth-child(even) { background: #CCC }
 table tr:nth-child(odd) { background: #FFF }
+
+table tr:nth-child(even) td.selected { background: #CCA }
+table tr:nth-child(odd) td.selected { background: #FFA }

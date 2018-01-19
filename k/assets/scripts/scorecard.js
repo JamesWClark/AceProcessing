@@ -21,25 +21,44 @@ var ScoreCard = function() {
     var mineStudents = function(worksheet, column) {
         if(worksheet[column] && worksheet[column].v) {
             worksheet[column].v.split('\n').forEach(function(ele) {
+                log ('what is ele = ', ele);
                 students[ele] = {
-                    assignments : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                    name : ele,
+                    assignments : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
                 };
             });  
         }
     };
     
-    students.toArray = function() {
+    var compareStudentNames = function(a,b) {
+        if (a.name < b.name)
+            return -1;
+        if (a.name > b.name)
+            return 1;
+        return 0;
+    }
+    
+    var studentsToArray = function() {
         var a = [];
         for (var key in students) {
-            if (students.hasOwnProperty(key)) {
-                //a.push({ name : key, assignments})
-                log(key + " -> ", students[key]);
+            if (students.hasOwnProperty(key) && key !== 'toSortedArray') {
+                log('student has key = ', key);
+                if(students[key] !== null) {
+                    log('pushing student = ', students[key]);
+                    a.push(students[key]);
+                }
             }
         }
-        return a;
+        return a.sort(compareStudentNames);
     };
     
+    var reset = function() {
+        students = {};
+        document.getElementById(resultId).innerHTML = '';
+    }
+    
     var receiveDrop = function(e) {
+        reset();
         e.stopPropagation();
         e.preventDefault();
         var files = e.dataTransfer.files, f = files[0];
@@ -65,58 +84,63 @@ var ScoreCard = function() {
                 if(completionStatus && completionStatus.v) {
                     completionStatus.v.split('\n').forEach(function(ele) {
                         var unit = assignments[assignmentName];
-                        students[ele].assignments[unit]++;
+                        students[ele].assignments[unit-1]++;
                     });
                 }
             }
             
             log('after parsing, students = ', students);
 
-            writeScores();
+            writeScores(studentsToArray());
         };
         if (rABS) reader.readAsBinaryString(f);
         else reader.readAsArrayBuffer(f);
     }
     
-    var writeScores = function() {
-        var html = '';
-        html += '<table><tr><th>Student Name</th>';
-
-        for(var i = 0; i < 16; i++) {
-            html += '<th>U' + (i) + '</th>';
-        }
-        html += '</tr>';
-
-        for (var key in students) {
-            if (students.hasOwnProperty(key)) {
-                var arr = students[key].assignments;
-                if(arr && arr.length) {
-                    html += '<tr><td id="student-name">' + key + '</td>';
-                    for(var i = 0; i < arr.length; i++) {
-                        html += '<td>' + arr[i] + '</td>';
-                    }
-                    html += '</tr>';
-                }
+    var writeScores = function(studentArray) {
+        log('student array = ', studentArray);
+        if(studentArray.length > 0) {
+            var head = '<tr><th>Student Name</th>';
+            for(var i = 0; i < studentArray[0].assignments.length; i++) {
+                head += '<th>U' + (i+1) + '</th>';
             }
+            head += '</tr>';
+
+            var body = '';
+            studentArray.forEach(function(student) {
+                var row = '<tr><td id="student-name">' + student.name + '</td>'
+                var scores = student.assignments;
+                scores.forEach(function(score) {
+                    row += '<td>' + score + '</td>'
+                });
+                row += '</tr>';
+                body += row;
+            });
+
+            var table = '<table id="scorecard-students-table">';
+            table += head;
+            table += body;
+            table += '</table>';
+
+            document.getElementById(resultId).innerHTML = table;
         }
-
-        html += '</table>';
-
-        document.getElementById('result').innerHTML = html;
     }
     
     self.loadAssignments = function(file) {
         $.get(file, function (data) {
             log('parsing data = ', data);
             var lines = data.split('\n');
+            var count = 0;
             lines.forEach(function (line) {
                 if (line.length > 0) {
+                    count++;
                     var columns = line.trim().split('\t');
                     var unit = columns[0];
                     var name = columns[1];
                     assignments[name] = parseInt(unit);
                 }
             });
+            assignments.count = count;
             log('loaded assignments = ', assignments);
         });
     };
