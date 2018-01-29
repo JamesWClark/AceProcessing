@@ -97,12 +97,23 @@ var ScoreCard = function() {
         else reader.readAsArrayBuffer(f);
     }
     
+    // filters assignments by unit number
+    var getPossible = function(index) {
+        // https://stackoverflow.com/a/37615234/1161948
+        var filtered = Object.keys(assignments).reduce(function (filtered, key) {
+            if (assignments[key] === index)
+                filtered[key] = assignments[key];
+            return filtered;
+        }, {});
+        return Object.keys(filtered).length;
+    }
+    
     var writeScores = function(studentArray) {
         log('student array = ', studentArray);
         if(studentArray.length > 0) {
             var head = '<tr><th>Student Name</th>';
             for(var i = 0; i < studentArray[0].assignments.length; i++) {
-                head += '<th>U' + (i+1) + '</th>';
+                head += '<th><div>HW' + (i+1) + '</div><div>/' + getPossible(i+1) + '</div></th>';
             }
             head += '</tr>';
 
