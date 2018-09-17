@@ -247,7 +247,6 @@ var pimp = function(index) {
         
         str = str.substring(0, lastIndex + 1);
 
-        console.log(str);
         setNewSketch(str);
         setEditorCode(str);
     }
