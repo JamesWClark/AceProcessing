@@ -210,11 +210,7 @@ var setNewSketch = function(code) {
     container.html('');
     container.append(canvas);
 
-    try {
-        new Processing(canvas, code);
-    } catch (err) {
-        $('#error-message').html(err);
-    }
+    new Processing(canvas, code);
 };
 
 // called by keydown or button click - flips through sketches and code
@@ -228,9 +224,33 @@ var pimp = function(index) {
     for (var i = 0; i < f.code.length; i++) {
         code += f.code[i] + '\n\n\n';
     }
-    
-    setNewSketch(code);
-    setEditorCode(code);
+
+    try {
+        setNewSketch(code);
+        setEditorCode(code);
+    } catch(err) {
+        
+        /* I would get error messages like this:
+         *
+            Mac OS X        	2~ATTRcom.apple.lastuseddate#PSU4[炄
+        
+         * I'm trying to detect and prevent it
+         */
+        
+        var str = code;
+        
+        // the idea is to cut off after the last ; or }
+        
+        var match      = str.match(/[;}]/gi);
+        var firstIndex = str.indexOf(match[0]);
+        var lastIndex  = str.lastIndexOf(match[match.length-1]);
+        
+        str = str.substring(0, lastIndex + 1);
+
+        console.log(str);
+        setNewSketch(str);
+        setEditorCode(str);
+    }
     
     if (f.paths) {
         $('#files-list-container').show(); 
