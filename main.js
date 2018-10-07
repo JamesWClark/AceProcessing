@@ -226,8 +226,8 @@ var pimp = function(index) {
     }
 
     try {
-        setNewSketch(code);
         setEditorCode(code);
+        setNewSketch(code);
     } catch(err) {
         
         /* I would get error messages like this:
@@ -247,8 +247,13 @@ var pimp = function(index) {
         
         str = str.substring(0, lastIndex + 1);
 
-        setNewSketch(str);
-        setEditorCode(str);
+        try {
+            setEditorCode(str);
+            setNewSketch(str);
+        } catch(err) {
+            $('#error-message').text(err);
+        }
+        
     }
     
     if (f.paths) {
