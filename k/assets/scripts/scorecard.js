@@ -1,13 +1,16 @@
 var ScoreCard = function() {
     
     var self = this;
-    
     var resultId = null;
+    
+    // my guess is binaryString is XLS and arrayBuffer is XLSX
     var rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
     
+    // use as dictionaries
     var students = {};
     var assignments = {};
 
+    // my logger
     var log = function(msg, obj) {
         var debug = true;
         if(debug) {
@@ -18,6 +21,7 @@ var ScoreCard = function() {
         }
     };
     
+    // get names and make student objects
     var mineStudents = function(worksheet, column) {
         if(worksheet[column] && worksheet[column].v) {
             worksheet[column].v.split('\n').forEach(function(ele) {
@@ -30,6 +34,7 @@ var ScoreCard = function() {
         }
     };
     
+    // alph sort by name
     var compareStudentNames = function(a,b) {
         if (a.name < b.name)
             return -1;
@@ -38,6 +43,7 @@ var ScoreCard = function() {
         return 0;
     }
     
+    // convert students dictionary to sorted students array
     var studentsToArray = function() {
         var a = [];
         for (var key in students) {
@@ -52,11 +58,15 @@ var ScoreCard = function() {
         return a.sort(compareStudentNames);
     };
     
+    // clear the data and the gui
     var reset = function() {
         students = {};
         document.getElementById(resultId).innerHTML = '';
     }
     
+    // where the magic happens
+    // an excel file landed
+    // students are graded here
     var receiveDrop = function(e) {
         reset();
         e.stopPropagation();
@@ -65,7 +75,7 @@ var ScoreCard = function() {
         var reader = new FileReader();
         reader.onload = function (e) {
             var data = e.target.result;
-            if (!rABS) data = new Uint8Array(data);
+            if (!rABS) data = new Uint8Array(data); // wha?
             
             var workbook = XLSX.read(data, { type: rABS ? 'binary' : 'array' });
             var worksheetName = workbook.SheetNames[0];
@@ -108,6 +118,7 @@ var ScoreCard = function() {
         return Object.keys(filtered).length;
     }
     
+    // update gui
     var writeScores = function(studentArray) {
         log('student array = ', studentArray);
         if(studentArray.length > 0) {
@@ -137,6 +148,7 @@ var ScoreCard = function() {
         }
     }
     
+    // hard coded to load units, names from data/assignments.tsv
     self.loadAssignments = function(file) {
         $.get(file, function (data) {
             log('parsing data = ', data);
@@ -156,10 +168,12 @@ var ScoreCard = function() {
         });
     };
     
+    // attach file drop handler
     self.handleDrops = function(elementId) {
         document.getElementById(elementId).addEventListener('drop', receiveDrop, false);
     };
     
+    // write the gui
     self.writeTo = function(elementId) {
         resultId = elementId;
     };
