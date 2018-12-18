@@ -11,7 +11,7 @@
 3	The Power of the Docs
 3	Project: What's for Dinner?
 4	Intro to Variables
-4	Quiz: Variables
+4	Using variables
 4	Challenge: Bucktooth Bunny
 4	More on Variables
 4	Challenge: Funky Frog
@@ -28,7 +28,7 @@
 6	Challenge: Mouse movement mania
 7	Using math expressions in JS
 7	Resizing shapes with variable expressions
-7	Quiz: Variable Expressions
+7	Using variable expressions
 7	Challenge: Brown bear eyes
 7	Project: Animal attack
 8	Terrific Text: Part One
@@ -64,7 +64,7 @@
 11	Debugging with println()s
 11	More debugging tips
 12	Intro to While Loops
-12	Quiz: While Loops
+12	Using while loops
 12	Challenge: A Loopy Ruler
 12	More While Loops: Balloon Hopper
 12	Challenge: A Loopy Landscape
@@ -75,7 +75,7 @@
 12	Project: Build-a-House
 13	Readable Code
 13	Clarifying with Comments
-13	Quiz: Clean code
+13	Writing clean code
 14	Intro to Arrays
 14	Challenge: Favorite Fruits
 14	Looping through Arrays
