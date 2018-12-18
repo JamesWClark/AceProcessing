@@ -18,3 +18,11 @@ $('#result').on('click', '#scorecard-students-table tr th, #scorecard-students-t
     var columnNo = $(this).index();
     $(this).closest("table").find("tr td:nth-child(" + (columnNo + 1) + ")").addClass('selected');
 });
+
+$('#auto-score-projects').change(function() {
+    if(this.checked) {
+        grader.autoProjects(true);
+    } else {
+        grader.autoProjects(false);
+    }
+});

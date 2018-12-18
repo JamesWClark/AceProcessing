@@ -1,4 +1,10 @@
-var ScoreCard = function() {
+var ScoreCard = function(config) {
+    
+    if(!config) {
+        config = {
+            autoProjects : false
+        };
+    }
     
     var self = this;
     var resultId = null;
@@ -81,9 +87,20 @@ var ScoreCard = function() {
             var worksheetName = workbook.SheetNames[0];
             var worksheet = workbook.Sheets[worksheetName];
 
+            // sets student dictionary from names spread across three columns
             mineStudents(worksheet, 'B2');
             mineStudents(worksheet, 'C2');
             mineStudents(worksheet, 'D2');
+            
+            // sets scores on the student dictionary
+            function setCompletions(completionStatus) {
+                if(completionStatus && completionStatus.v) {
+                    completionStatus.v.split('\n').forEach(function(ele) {
+                        var unit = assignments[assignmentName];
+                        students[ele].assignments[unit-1]++;
+                    });
+                }                
+            }
 
             // todo: make this dynamic
             const START = 3; // What is Programming?
@@ -91,12 +108,16 @@ var ScoreCard = function() {
             for(var i = START; i <= STOP; i++) {
                 var assignmentName = worksheet['A' + i].v;
                 var completionStatus = worksheet['D' + i];
-                if(completionStatus && completionStatus.v) {
-                    completionStatus.v.split('\n').forEach(function(ele) {
-                        var unit = assignments[assignmentName];
-                        students[ele].assignments[unit-1]++;
-                    });
+                
+                // auto award every student their project score
+                if(config && config.autoProjects) {
+                    if(assignmentName.indexOf('Project:') !== -1) {
+                        setCompletions(worksheet['B' + i]);
+                        setCompletions(worksheet['C' + i]);
+                    }
                 }
+                // always score completes anyway
+                setCompletions(worksheet['D' + i]);
             }
             
             log('after parsing, students = ', students);
@@ -177,4 +198,8 @@ var ScoreCard = function() {
     self.writeTo = function(elementId) {
         resultId = elementId;
     };
+    
+    self.autoProjects = function(torf) {
+        config.autoProjects = torf;
+    }
 }
